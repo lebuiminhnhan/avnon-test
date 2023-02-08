@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { IAnswerModel, IFormModel } from 'src/app/model/model';
 
 @Component({
   selector: 'app-form-answer',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormAnswerComponent implements OnInit {
 
-  constructor() { }
+  data!: IFormModel
+  constructor(private router: Router) { }
 
   ngOnInit() {
+    if (history.state.data) {
+      this.data = history.state.data as IFormModel;
+    } else {
+      this.router.navigate(['']);
+    }
+  }
+
+  answer(answer: IAnswerModel[]) {
+    return answer.filter(x => x.value);
   }
 
 }

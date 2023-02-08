@@ -1,3 +1,89 @@
-<p>
-  form-builder works!
-</p>
+<div class="container mt-5">
+  <form [formGroup]="questionsForm">
+    <div class="form-group mb-3">
+      <label class="form-label fw-bold">Please tell us about yourself *</label>
+      <textarea type="text" rows="8" class="form-control" formControlName="description" required>
+      </textarea>
+      <div *ngIf="getControl['description'].touched && getControl['description'].invalid" class="text-danger">
+        <div *ngIf="getControl['description'].errors">Please tell us about yourself.</div>
+      </div>
+    </div>
+    <div formArrayName="questions">
+      <div *ngFor="let question of questions.controls; let i=index" class="form-group">
+        <div [formGroupName]="i">
+          <label class="form-label fw-bold">{{question.value.questionName}} <span *ngIf="question.value.isRequired">*</span> </label>
+          <div  [formArrayName]="'answerName'">
+            <div *ngFor="let answer of getAnswers(i).controls; let j=index">
+              <div class="form-check" [formGroupName]="j">
+                <input class="form-check-input" type="checkbox" id="check{{j}}" name="option{{j}}"
+                formControlName="value">
+                <label class="form-check-label">{{answer.value.answer}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-3">
+      <a class="link" style="cursor: pointer;" (click)="openModalAddQuestion(addQuestionModal)">Add new Question</a>
+    </div>
+
+
+  </form>
+  <button class="btn btn-danger btn-block" type="button" (click)="onSubmitReviewAnswer()">Review my answers > </button>
+</div>
+<ng-template #addQuestionModal let-modal>
+  <div class="modal-body px-0 py-2 py-sm-0">
+    <button class="btn-close position-absolute top-0 end-0 mt-3 me-3" type="button"
+      (click)="modal.close('Close click')"></button>
+    <div class="row mx-0 align-items-center">
+      <div class="col-md-12 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5">
+        <h4>Add a new Question</h4>
+        <div>
+          <div class="row">
+              <div class="col-12 col-sm-6 mb-3">
+                <form [formGroup]="newQuestionsForm">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"
+                    formControlName="isTypeCheckbox">
+                    <label class="form-check-label">Type question checkbox</label>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label class="form-label fw-bold">Question Name</label>
+                    <input type="text" class="form-control" formControlName="questionName"/>
+                  </div>
+                  <div *ngIf="newQuestions.value.isTypeCheckbox">
+                    <div  [formArrayName]="'answerName'">
+                      <div *ngFor="let answer of answers.controls; let j=index">
+                        <div class="form-group" [formGroupName]="j">
+                          <label class="form-label fw-bold" for="option{{j}}">Add option name</label>
+                          <input class="form-control" type="text" id="check{{j}}" name="option{{j}}"
+                          formControlName="answer">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="my-3">
+                      <a class="link" style="cursor: pointer;" (click)="addAnotherAnswer()">Add another answer</a>
+                    </div>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"
+                    formControlName="isRequired">
+                    <label class="form-check-label">This field is required</label>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="modal.close('Close click');">
+        Close
+      </button>
+      <button class="btn btn-danger btn-block btn-sm" (click)="onSubmitAddQuestion()">Submit</button>
+    </div>
+</ng-template>

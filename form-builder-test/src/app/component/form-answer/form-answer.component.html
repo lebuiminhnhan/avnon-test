@@ -1,3 +1,13 @@
-<p>
-  form-answer works!
-</p>
+<div class="container mt-5">
+  <h6>Please tell us about yourself</h6>
+  <p class="mb-1 px-3">{{data.description}}</p>
+  <div *ngFor="let item of data.questions">
+    <h6>{{item.questionName}}</h6>
+    <p class="mb-1 px-3" *ngFor="let i of answer(item.answerName)">
+      {{item.isTypeCheckbox ? i.answer : i.answerText }}
+    </p>
+  </div>
+  <div class="my-3">
+    <a class="link" style="cursor: pointer;" routerLink="/form/builder">Back</a>
+  </div>
+</div>
