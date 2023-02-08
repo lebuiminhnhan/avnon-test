@@ -6,6 +6,8 @@ export interface IQuetionsModel {
   questionName: string;
   answerName: IAnswerModel[];
   isRequired: boolean;
+  isAllow: boolean;
+
   isTypeCheckbox: boolean;
 }
 export interface IAnswerModel {

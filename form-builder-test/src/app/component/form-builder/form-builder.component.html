@@ -4,8 +4,8 @@
       <label class="form-label fw-bold">Please tell us about yourself *</label>
       <textarea type="text" rows="8" class="form-control" formControlName="description" required>
       </textarea>
-      <div *ngIf="getControl['description'].touched && getControl['description'].invalid" class="text-danger">
-        <div *ngIf="getControl['description'].errors">Please tell us about yourself.</div>
+      <div *ngIf="getQuestionControl['description'].touched && getQuestionControl['description'].invalid" class="text-danger">
+        <div *ngIf="getQuestionControl['description'].errors">Please tell us about yourself.</div>
       </div>
     </div>
     <div formArrayName="questions">
@@ -14,10 +14,13 @@
           <label class="form-label fw-bold">{{question.value.questionName}} <span *ngIf="question.value.isRequired">*</span> </label>
           <div  [formArrayName]="'answerName'">
             <div *ngFor="let answer of getAnswers(i).controls; let j=index">
-              <div class="form-check" [formGroupName]="j">
+              <div class="form-check" [formGroupName]="j" *ngIf="question.value.isTypeCheckbox">
                 <input class="form-check-input" type="checkbox" id="check{{j}}" name="option{{j}}"
                 formControlName="value">
                 <label class="form-check-label">{{answer.value.answer}}</label>
+              </div>
+              <div class="form-group mb-3" *ngIf="!question.value.isTypeCheckbox">
+                <input type="text" class="form-control" formControlName="answerText"/>
               </div>
             </div>
           </div>
@@ -52,6 +55,7 @@
                   <div class="form-group mb-3">
                     <label class="form-label fw-bold">Question Name</label>
                     <input type="text" class="form-control" formControlName="questionName"/>
+
                   </div>
                   <div *ngIf="newQuestions.value.isTypeCheckbox">
                     <div  [formArrayName]="'answerName'">
@@ -59,7 +63,7 @@
                         <div class="form-group" [formGroupName]="j">
                           <label class="form-label fw-bold" for="option{{j}}">Add option name</label>
                           <input class="form-control" type="text" id="check{{j}}" name="option{{j}}"
-                          formControlName="answer">
+                          formControlName="answer" required>
                         </div>
                       </div>
                     </div>
@@ -68,6 +72,11 @@
                     </div>
                   </div>
 
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"
+                    formControlName="isAllow">
+                    <label class="form-check-label">Allow user to specify their own answer</label>
+                  </div>
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox"
                     formControlName="isRequired">
@@ -84,6 +93,6 @@
       <button type="button" class="btn btn-secondary btn-sm" (click)="modal.close('Close click');">
         Close
       </button>
-      <button class="btn btn-danger btn-block btn-sm" (click)="onSubmitAddQuestion()">Submit</button>
+      <button class="btn btn-danger btn-block btn-sm"  (click)="onSubmitAddQuestion()">Submit</button>
     </div>
 </ng-template>

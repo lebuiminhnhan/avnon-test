@@ -27,6 +27,7 @@ export class FormBuilderComponent implements OnInit {
       questions: this._formBuilder.array([this._formBuilder.group({
         questionName: 'Please select the languages you know',
         isRequired: true,
+        isAllow: true,
         isTypeCheckbox: true,
         answerName: this._formBuilder.array([
           this._formBuilder.group({
@@ -50,7 +51,10 @@ export class FormBuilderComponent implements OnInit {
     })
   }
 
-  get getControl(){
+  get getQuestionControl(){
+    return this.questionsForm.controls;
+  }
+  get getNewQuestionControl(){
     return this.questionsForm.controls;
   }
 
@@ -80,7 +84,8 @@ export class FormBuilderComponent implements OnInit {
     return this._formBuilder.group({
       questionName: '',
       isRequired: false,
-      isTypeCheckbox: false,
+      isAllow: false,
+      isTypeCheckbox: true,
       answerName: this._formBuilder.array([
         this._formBuilder.group({
           answer: '',
@@ -92,12 +97,15 @@ export class FormBuilderComponent implements OnInit {
   }
 
   onSubmitAddQuestion() {
+    const isUseCheck = this.newQuestionsForm.controls["isTypeCheckbox"].value;
     this.questions.push(this.newQuestionsForm);
     this.modalAddQuestion.dismiss();
   }
 
   onSubmitReviewAnswer() {
-    console.log(this.questionsForm);
+    if (this.getQuestionControl.invalid) {
+      return;
+    }
     this._router.navigate(['form/answers'], {state: {data: this.questionsForm.value as IFormModel}})
   }
 
